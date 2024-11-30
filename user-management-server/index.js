@@ -29,14 +29,23 @@ async function run() {
     await client.connect();
     //
    const userCollection = client.db("userDB").collection("users");
-// 
 
+// for get the api
 app.get('/users', async (req , res)=> {  
     const cursor = userCollection.find()
     const result = await cursor.toArray();
    res.send(result)
 })
 
+// for an item post
+app.post("/users", async (req , res)=>{
+   const userInfo = req.body;
+   console.log(userInfo);
+   const result = await userCollection.insertOne(userInfo);
+   res.send(result)
+})
+
+// delete
 
 
 
