@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 const port = process.env.PORT || 5000;
 const app = express();
@@ -36,6 +36,13 @@ app.get('/users', async (req , res)=> {
     const result = await cursor.toArray();
    res.send(result)
 })
+// for get single item
+// app.get( '/users/:id', async (req, res)=>{
+//    const id = req.params.id;
+//    const query = {_id : new ObjectId(id)};
+//    const result = await userCollection.findOne(query);
+//    res.send(result);
+// })
 
 // for an item post
 app.post("/users", async (req , res)=>{
@@ -45,7 +52,35 @@ app.post("/users", async (req , res)=>{
    res.send(result)
 })
 
+
+
+// for put/update
+app.put('/users/:id' , async ( req , res) =>{
+    const id = req.params.id;
+    const filter = {_id: new ObjectId(id)};
+    const updateUserInfo = req.body;
+    const options = { upsert: true };
+    const updateUser = {
+        $set : {
+            name: updateUserInfo?.name , email: updateUserInfo?.email , gender: updateUserInfo?.gender , status :updateUserInfo?.status
+        }
+    }
+   
+    const result = await userCollection.updateOne(filter , updateUser , options)
+    res.send(result)
+
+})
+
+
+
 // delete
+app.delete('/users/:id' , async (req , res ) => {
+      const id = req.params.id;
+      console.log(id)
+      const query = {_id : new ObjectId(id)};
+      const result = await userCollection.deleteOne(query);
+      res.send(result)
+})
 
 
 

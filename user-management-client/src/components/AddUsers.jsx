@@ -51,8 +51,8 @@ const AddUsers = () => {
             <input
               type="text"
               name="name"
-              placeholder="Type here"
-              className="input input-bordered w-full mt-2 "
+              placeholder="Type User Name"
+              className="input input-bordered w-full mt-2 text-slate-500 "
             />
           </label>
           {/*  */}
@@ -63,8 +63,8 @@ const AddUsers = () => {
             <input
               type="text"
               name="email"
-              placeholder="Type here"
-              className="input input-bordered w-full mt-2"
+              placeholder="Type User Email"
+              className="input input-bordered w-full mt-2 text-slate-500"
             />
           </label>
 
