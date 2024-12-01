@@ -1,10 +1,9 @@
 import React from "react";
 import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
 import { Link } from "react-router-dom";
-
+import Swal from 'sweetalert2';
 const AddUsers = () => {
-
-
+    // 
     const handleSubmit =(e)=>{
       e.preventDefault();
     //   
@@ -14,8 +13,9 @@ const AddUsers = () => {
       const gender = form.radio1.value;
       const status = form.radio2.value;
        const userInfo ={ name , email, gender, status}
-       console.log( userInfo);
-       fetch('http://localhost:5000/users',{
+      //  
+    
+       fetch('https://user-management-server-six.vercel.app/users',{
         method:'POST',
         headers:{
             "content-type" : 'application/json'
@@ -24,15 +24,21 @@ const AddUsers = () => {
        })
        .then (res=> res.json())
        .then ( data => {
-        console.log(data)
-        alert("item added to data base")
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "User SuccessFully Added",
+          showConfirmButton:true,
+          timer: 1500
+        });
+        form.reset();
        })
     }
 
 // 
   return (
     <div className="py-20  ">
-       <Link to="/users"> <button className="flex justify-start items-center gap-2 text-xl text-slate-600 ml-20"><MdKeyboardDoubleArrowLeft className="text-2xl" /> <span>All Users</span></button></Link>
+       <Link to="/"> <button className="flex justify-start items-center gap-2 text-xl text-slate-600 ml-20"><MdKeyboardDoubleArrowLeft className="text-2xl" /> <span>All Users</span></button></Link>
       <div className="space-y-4 text-center mb-16">
         <h1 className="capitalize text-slate-700 font-semibold text-3xl">
           New users

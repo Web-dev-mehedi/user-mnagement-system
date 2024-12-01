@@ -37,17 +37,16 @@ app.get('/users', async (req , res)=> {
    res.send(result)
 })
 // for get single item
-// app.get( '/users/:id', async (req, res)=>{
-//    const id = req.params.id;
-//    const query = {_id : new ObjectId(id)};
-//    const result = await userCollection.findOne(query);
-//    res.send(result);
-// })
+app.get( '/users/:id', async (req, res)=>{
+   const id = req.params.id;
+   const query = {_id : new ObjectId(id)};
+   const result = await userCollection.findOne(query);
+   res.send(result);
+})
 
 // for an item post
 app.post("/users", async (req , res)=>{
    const userInfo = req.body;
-   console.log(userInfo);
    const result = await userCollection.insertOne(userInfo);
    res.send(result)
 })
@@ -76,7 +75,6 @@ app.put('/users/:id' , async ( req , res) =>{
 // delete
 app.delete('/users/:id' , async (req , res ) => {
       const id = req.params.id;
-      console.log(id)
       const query = {_id : new ObjectId(id)};
       const result = await userCollection.deleteOne(query);
       res.send(result)

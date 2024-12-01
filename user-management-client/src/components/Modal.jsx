@@ -1,26 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { GiCrossMark } from "react-icons/gi";
+import Swal from "sweetalert2";
+const Modal = ({ user  }) => {
+  const { name, email, gender, status, _id } = user || {};
+  const [gendery, setGender] = useState(gender || "male");
+  const [statuss, setStatus] = useState(status || "active");
 
-const Modal = ({user}) => {
-
-   const {name , email , gender, status, _id} = user||{}
-   const [gendery, setGender] = useState(gender);
-   const [statuss, setStatus] = useState(status );
+// close modal on click save btn
+  const closeModal = ()=>{
+    document.getElementById("my_modal_5").close();
+  }
+  //
+  const handleUpdate = (e) => {
     // 
-    const handleUpdate = (e) => { 
-        // 
-        e.preventDefault()
+    e.preventDefault();
+    //
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const gender = form.radio1.value;
+    const status = form.radio2.value;
+    const updateduserInfo = { name, email, gender, status };
+    //  
+    closeModal();
+    //
+    Swal.fire({
+      title: "Do you want to save the changes?",
+      showDenyButton: true,
+      confirmButtonText: "Save",
+      denyButtonText: `Don't save`,
+    }).then((result) => {
+      if (result.isConfirmed) {
         //
-        const form = e.target;
-        const name = form.name.value;
-        const email = form.email.value;
-        const gender = form.radio1.value;
-        const status = form.radio2.value;
-         const updateduserInfo ={ name , email, gender, status}
-    
-
-        //  
-        fetch(`http://localhost:5000/users/${_id}`, {
+        fetch(`https://user-management-server-six.vercel.app/users/${_id}`, {
           method: "PUT",
           headers: {
             "content-type": "application/json",
@@ -29,11 +41,18 @@ const Modal = ({user}) => {
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
-            alert("item updated");
+            Swal.fire("Saved!", "", "success");
+             setTimeout(() => {
+              window.location.reload();
+             }, 1000);
           });
-      };
-// 
+       
+      } else if (result.isDenied) {
+        Swal.fire("Changes are not saved", "", "info");
+      }
+    });
+  };
+  //
 
   return (
     <div>
@@ -60,7 +79,7 @@ const Modal = ({user}) => {
                   type="text"
                   name="name"
                   placeholder="Enter updated name"
-                   defaultValue={name}
+                  defaultValue={name}
                   className="input input-bordered w-full mt-2 text-slate-500 "
                 />
               </label>
@@ -85,8 +104,8 @@ const Modal = ({user}) => {
                   name="radio1"
                   value="male"
                   className="radio radio-success"
-                  defaultChecked = {gendery === "male"}
-                  onChange={()=>setGender('male')}
+                  checked={gendery === "male"}
+                  onChange={() => setGender("male")}
                 />{" "}
                 <span>Male</span>
                 <input
@@ -94,8 +113,8 @@ const Modal = ({user}) => {
                   name="radio1"
                   value="female"
                   className="radio radio-success ml-12"
-                  defaultChecked = {gendery === "female"}
-                  onChange={()=>setGender('female')}
+                  checked={gendery === "female"}
+                  onChange={() => setGender("female")}
                 />
                 <span>Female</span>
               </div>
@@ -108,8 +127,8 @@ const Modal = ({user}) => {
                   name="radio2"
                   value="active"
                   className="radio radio-success"
-                  defaultChecked ={statuss === "active"}
-                  onChange={()=>setStatus('female')}
+                   defaultChecked={statuss === "active"}
+                  onChange={() => setStatus("female")}
                 />{" "}
                 <span>Active</span>
                 <input
@@ -117,13 +136,14 @@ const Modal = ({user}) => {
                   name="radio2"
                   value="inactive"
                   className="radio radio-success ml-12"
-                  defaultChecked ={statuss === "inactive"}
-                  onChange={()=>setStatus('female')}
+                   defaultChecked={statuss === "inactive"}
+                  onChange={() => setStatus("female")}
                 />
                 <span>Inactive</span>
               </div>
             </div>
             <input
+             onClick={closeModal}
               type="submit"
               value="Save"
               className="text-xl font-semibold text-slate-600 bg-green-500 w-full rounded-md py-2 mt-8 transition-all hover:bg-slate-400"
