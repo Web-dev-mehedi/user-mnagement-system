@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { GiCrossMark } from "react-icons/gi";
 import Swal from "sweetalert2";
-const Modal = ({ user  }) => {
+const Modal = ({ user , newUsers , setNewUsers }) => {
   const { name, email, gender, status, _id } = user || {};
   const [gendery, setGender] = useState(gender || "male");
   const [statuss, setStatus] = useState(status || "active");
+  
 
 // close modal on click save btn
   const closeModal = ()=>{
@@ -42,9 +43,12 @@ const Modal = ({ user  }) => {
           .then((res) => res.json())
           .then((data) => {
             Swal.fire("Saved!", "", "success");
-             setTimeout(() => {
-              window.location.reload();
-             }, 1000);
+            //  setTimeout(() => {
+            //   window.location.reload();
+            //  }, 1000);
+            // for initially data update on ui
+              setNewUsers(newUsers.map( i => i._id === _id ? {...i,...updateduserInfo, _id: i._id}  : i))
+              form.reset()
           });
        
       } else if (result.isDenied) {

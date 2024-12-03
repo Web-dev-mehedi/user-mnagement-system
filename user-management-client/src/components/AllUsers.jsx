@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteForever } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
@@ -14,12 +14,16 @@ const AllUsers = () => {
 
   //
   const users = useLoaderData();
-  const [newUsers, setNewUsers] = useState(users) || [];
+  const [newUsers, setNewUsers] = useState(Array.isArray(users) ? users : []) ;
 
   const [userInfo, setUserInfo] = useState();
-
+    
+  // useEffect(()=>{
+     
+  // },[newUsers])
   //
   const handlePopUp = (id) => {
+    console.log(id , user , newUsers)
     setUserInfo(newUsers.find((item) => item._id === id));
     //
     document.getElementById("my_modal_5").showModal();
@@ -124,28 +128,28 @@ const AllUsers = () => {
               <th>Action</th>
             </tr>
           </thead>
-          {newUsers?.map((user, index) => (
+          {newUsers.map((item, index) => (
             <tbody key={index}>
               {/* row 1 */}
               <tr className="hover:bg-slate-100 transition-all">
                 <th>{index + 1}</th>
-                <td>{user?.name}</td>
-                <td>{user?.email}</td>
-                <td>{user?.gender}</td>
-                <td>{user?.status}</td>
+                <td>{item?.name}</td>
+                <td>{item?.email}</td>
+                <td>{item?.gender}</td>
+                <td>{item?.status}</td>
                 <td className="flex gap-2 text-xl">
                   <CiEdit
-                    onClick={() => handlePopUp(user._id)}
+                    onClick={() => handlePopUp(item._id)}
                     className="bg-white shadow-md w-10 h-8 p-1 hover:bg-slate-300 rounded-md transition-all"
                   />{" "}
                   <MdDeleteForever
-                    onClick={() => handleDelete(user._id)}
+                    onClick={() => handleDelete(item._id)}
                     className="bg-white shadow-md w-10 h-8 p-1 hover:bg-slate-300 rounded-md transition-all"
                   />
                 </td>
               </tr>
               {/*  */}
-              <Modal user={userInfo} />
+              <Modal user={userInfo} newUsers={newUsers} setNewUsers={setNewUsers} />
             </tbody>
           ))}
         </table>
